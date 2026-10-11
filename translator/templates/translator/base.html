@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Language Translator{% endblock %}</title>
+  <title>{% block title %}Polyglot{% endblock %}</title>
 
   <!-- Apply the saved theme BEFORE the page draws, so it never flashes white in dark mode.
        Order: saved choice -> operating-system preference -> light. -->
@@ -28,7 +28,7 @@
   <!-- data-bs-theme="dark" on the navbar keeps its text white on the blue background in both modes -->
   <nav class="navbar navbar-expand-md bg-primary" data-bs-theme="dark">
     <div class="container">
-      <a class="navbar-brand fw-semibold" href="{% url 'translator:home' %}">🌐 Language Translator</a>
+      <a class="navbar-brand fw-semibold" href="{% url 'translator:home' %}">🌐 Polyglot</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
               aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -74,8 +74,8 @@
   </main>
 
   <footer class="border-top py-3 text-center text-body-secondary small">
-    Python Language Translator · BVCOE Pune ·
-    <a href="https://github.com/saksham7730/python-language-translator" class="link-secondary">GitHub</a>
+    Polyglot · BVCOE Pune ·
+    <a href="https://github.com/saksham7730/polyglot-translator" class="link-secondary">GitHub</a>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
