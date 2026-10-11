@@ -1,13 +1,15 @@
-# 🌐 Python Language Translator
+# 🌐 Polyglot
 
-A Django web app (with a companion command-line tool) that translates text between 100+ languages, **auto-detects the source language** (including Hindi typed in English letters), keeps a searchable **translation history** in a database, and shows **usage analytics** built with Pandas, NumPy and Matplotlib.
+**Translate between 133 languages, even Hinglish.**
+
+Polyglot is a Django web app (with a companion command-line tool) that translates text between 100+ languages, **auto-detects the source language** (including Hindi typed in English letters), keeps a searchable **translation history** in a database, and shows **usage analytics** built with Pandas, NumPy and Matplotlib.
 
 > **Institute:** Bharati Vidyapeeth College of Engineering, Pune
 > **Faculty guide:** Prof. Sonali D Mali
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Django](https://img.shields.io/badge/django-5.2%20LTS-green)
-![Tests](https://img.shields.io/badge/tests-150%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-157%20passing-brightgreen)
 
 ---
 
@@ -83,7 +85,7 @@ A Django web app (with a companion command-line tool) that translates text betwe
 ## Project structure
 
 ```
-python-language-translator/
+polyglot-translator/
 ├── .github/                       # issue templates (user story, bug) + PR template
 ├── translator_project/            # Django settings (.env-driven) and root URLs
 ├── translator/
@@ -91,7 +93,7 @@ python-language-translator/
 │   ├── templates/translator/      # base, home, file, history, detail, stats, confirm_delete
 │   ├── static/translator/         # style.css, theme.js, home.js, speech.js
 │   ├── migrations/                # database schema history
-│   ├── tests/                     # 150 tests
+│   ├── tests/                     # 157 tests
 │   ├── models.py  forms.py  views.py  urls.py  admin.py  exceptions.py
 ├── scripts/
 │   ├── github_setup.py            # creates labels, milestones, issues, board fields (gh CLI)
@@ -112,8 +114,8 @@ python-language-translator/
 
 **Windows (PowerShell)**
 ```powershell
-git clone https://github.com/saksham7730/python-language-translator.git
-cd python-language-translator
+git clone https://github.com/saksham7730/polyglot-translator.git
+cd polyglot-translator
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
@@ -121,8 +123,8 @@ pip install -r requirements.txt
 
 **Linux / macOS**
 ```bash
-git clone https://github.com/saksham7730/python-language-translator.git
-cd python-language-translator
+git clone https://github.com/saksham7730/polyglot-translator.git
+cd polyglot-translator
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -194,7 +196,7 @@ python scripts/db_raw_sql.py drop              # DROP TABLE
 ```powershell
 python manage.py test
 ```
-150 tests cover the language service, detection (including Hinglish), the engine fallback, the Gemini client, timeouts and cool-down, forms, every page, the CLI, chunking, analytics and the raw SQL script. All translation engines are **mocked** in tests, so they run offline in a couple of seconds, need no API key and never use up the free APIs.
+157 tests cover the language service, detection (including Hinglish), the engine fallback, the Gemini client, timeouts and cool-down, forms, every page, the CLI, chunking, analytics and the raw SQL script. All translation engines are **mocked** in tests, so they run offline in a couple of seconds, need no API key and never use up the free APIs.
 
 ## Screenshots
 
@@ -217,9 +219,9 @@ python manage.py test
 
 ## Project management
 
-- **User stories** are tracked as [GitHub Issues](https://github.com/saksham7730/python-language-translator/issues) with acceptance criteria, MoSCoW priority and story points.
+- **User stories** are tracked as [GitHub Issues](https://github.com/saksham7730/polyglot-translator/issues) with acceptance criteria, MoSCoW priority and story points.
 - **Kanban board:** [GitHub Project](https://github.com/users/saksham7730/projects/2) with columns Backlog → Ready → In progress → In review → Done.
-- **Sprints** are tracked as [Milestones](https://github.com/saksham7730/python-language-translator/milestones):
+- **Sprints** are tracked as [Milestones](https://github.com/saksham7730/polyglot-translator/milestones):
 
 | Sprint | Dates (2026) | Goal |
 |---|---|---|

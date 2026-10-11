@@ -1,5 +1,5 @@
 """
-Project settings for the Python Language Translator.
+Project settings for Polyglot, the language translator.
 
 Secrets and machine-specific values (secret key, debug flag, database login)
 are read from a .env file, so the same code runs on any machine and no
