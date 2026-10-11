@@ -1,4 +1,4 @@
-# 🌐 Polyglot
+﻿# ðŸŒ Polyglot
 
 **Translate between 133 languages, even Hinglish.**
 
@@ -9,7 +9,7 @@ Polyglot is a Django web app (with a companion command-line tool) that translate
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Django](https://img.shields.io/badge/django-5.2%20LTS-green)
-![Tests](https://img.shields.io/badge/tests-157%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-150%20passing-brightgreen)
 
 ---
 
@@ -30,19 +30,19 @@ Polyglot is a Django web app (with a companion command-line tool) that translate
 
 | | Feature | Story |
 |---|---|---|
-| 🔤 | Translate text between 133 languages | US-01 |
-| 🔍 | Auto-detect the source language, with a confidence check; recognises romanized Hindi ("Hinglish") | US-02, #17 |
-| 💾 | Every translation saved to the database; live stats on the home page | US-03 |
-| 📜 | History page: newest first, 10 per page, full-text view, "translate again" | US-04 |
-| 🔎 | Search and filter history by text, languages and date range | US-05 |
-| 🗑️ | Delete one translation or clear all, with confirmation | US-06 |
-| 🛡️ | Friendly errors (no internet, rate limit, timeout, same language…) and automatic backup engines | US-07 |
-| 🤖 | Optional Google Gemini engine (free API key) for high-quality translation and language detection | #20 |
-| 📊 | Statistics page: top language pairs, daily usage, target-language share, text-length stats | US-08 |
-| 💻 | Command-line translator sharing the same history (`cli.py`) | US-09 |
-| 📄 | Upload a `.txt` file (up to 20,000 characters), translated in chunks, download the result | US-10 |
-| 🔊 | Listen to the translation (text-to-speech) and copy it with one click | US-11 |
-| 🌗 | Light / dark theme toggle that remembers your choice | – |
+| ðŸ”¤ | Translate text between 133 languages | US-01 |
+| ðŸ” | Auto-detect the source language, with a confidence check; recognises romanized Hindi ("Hinglish") | US-02, #17 |
+| ðŸ’¾ | Every translation saved to the database; live stats on the home page | US-03 |
+| ðŸ“œ | History page: newest first, 10 per page, full-text view, "translate again" | US-04 |
+| ðŸ”Ž | Search and filter history by text, languages and date range | US-05 |
+| ðŸ—‘ï¸ | Delete one translation or clear all, with confirmation | US-06 |
+| ðŸ›¡ï¸ | Friendly errors (no internet, rate limit, timeout, same languageâ€¦) and automatic backup engines | US-07 |
+| ðŸ¤– | Optional Google Gemini engine (free API key) for high-quality translation and language detection | #20 |
+| ðŸ“Š | Statistics page: top language pairs, daily usage, target-language share, text-length stats | US-08 |
+| ðŸ’» | Command-line translator sharing the same history (`cli.py`) | US-09 |
+| ðŸ“„ | Upload a `.txt` file (up to 20,000 characters), translated in chunks, download the result | US-10 |
+| ðŸ”Š | Listen to the translation (text-to-speech) and copy it with one click | US-11 |
+| ðŸŒ— | Light / dark theme toggle that remembers your choice | â€“ |
 
 ## Tech stack
 
@@ -61,46 +61,46 @@ Polyglot is a Django web app (with a companion command-line tool) that translate
 ## Architecture
 
 ```
- Browser ──► urls.py ──► views.py ──► forms.py (validation)
-                            │
-                            ▼
+ Browser â”€â”€â–º urls.py â”€â”€â–º views.py â”€â”€â–º forms.py (validation)
+                            â”‚
+                            â–¼
               translator/services/   (plain Python, no Django)
-              ├─ languages.py   133 languages, code ↔ name, MyMemory code mapping
-              ├─ detection.py   langdetect + Hinglish rule, reliability check
-              ├─ engine.py      Google → Gemini → MyMemory fallback, timeout, cool-down
-              ├─ gemini.py      Gemini REST client (JSON structured output)
-              ├─ chunking.py    generator that splits long text
-              └─ analytics.py   Pandas / NumPy / Matplotlib
-                            │
-                            ▼
-                 models.py ──► Django ORM ──► SQLite / MySQL
-                            ▲              ▲
- cli.py (argparse) ─────────┘              └── scripts/db_raw_sql.py (raw SQL, DB-API)
+              â”œâ”€ languages.py   133 languages, code â†” name, MyMemory code mapping
+              â”œâ”€ detection.py   langdetect + Hinglish rule, reliability check
+              â”œâ”€ engine.py      Google â†’ Gemini â†’ MyMemory fallback, timeout, cool-down
+              â”œâ”€ gemini.py      Gemini REST client (JSON structured output)
+              â”œâ”€ chunking.py    generator that splits long text
+              â””â”€ analytics.py   Pandas / NumPy / Matplotlib
+                            â”‚
+                            â–¼
+                 models.py â”€â”€â–º Django ORM â”€â”€â–º SQLite / MySQL
+                            â–²              â–²
+ cli.py (argparse) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜              â””â”€â”€ scripts/db_raw_sql.py (raw SQL, DB-API)
 ```
 
 - **Service layer:** all translation logic lives in `translator/services/` and doesn't import Django, so the website and the CLI share one implementation and it can be unit-tested on its own.
 - **Post/Redirect/Get:** after a translation is saved, the page redirects, so refreshing never saves a duplicate.
-- **Graceful degradation:** engines are tried in order (Google → Gemini → MyMemory, or `PRIMARY_ENGINE` first). If one refuses (HTTP 429) or times out, the next one is used and the page says which engine translated.
+- **Graceful degradation:** engines are tried in order (Google â†’ Gemini â†’ MyMemory, or `PRIMARY_ENGINE` first). If one refuses (HTTP 429) or times out, the next one is used and the page says which engine translated.
 
 ## Project structure
 
 ```
 polyglot-translator/
-├── .github/                       # issue templates (user story, bug) + PR template
-├── translator_project/            # Django settings (.env-driven) and root URLs
-├── translator/
-│   ├── services/                  # languages, detection, engine, gemini, chunking, analytics
-│   ├── templates/translator/      # base, home, file, history, detail, stats, confirm_delete
-│   ├── static/translator/         # style.css, theme.js, home.js, speech.js
-│   ├── migrations/                # database schema history
-│   ├── tests/                     # 157 tests
-│   ├── models.py  forms.py  views.py  urls.py  admin.py  exceptions.py
-├── scripts/
-│   ├── github_setup.py            # creates labels, milestones, issues, board fields (gh CLI)
-│   └── db_raw_sql.py              # raw SQL demo: DDL + DML with sqlite3 / PyMySQL
-├── docs/screenshots/
-├── cli.py                         # command-line translator
-├── manage.py  requirements.txt  .env.example  .gitignore  .gitattributes
+â”œâ”€â”€ .github/                       # issue templates (user story, bug) + PR template
+â”œâ”€â”€ translator_project/            # Django settings (.env-driven) and root URLs
+â”œâ”€â”€ translator/
+â”‚   â”œâ”€â”€ services/                  # languages, detection, engine, gemini, chunking, analytics
+â”‚   â”œâ”€â”€ templates/translator/      # base, home, file, history, detail, stats, confirm_delete
+â”‚   â”œâ”€â”€ static/translator/         # style.css, theme.js, home.js, speech.js
+â”‚   â”œâ”€â”€ migrations/                # database schema history
+â”‚   â”œâ”€â”€ tests/                     # 150 tests
+â”‚   â”œâ”€â”€ models.py  forms.py  views.py  urls.py  admin.py  exceptions.py
+â”œâ”€â”€ scripts/
+â”‚   â”œâ”€â”€ github_setup.py            # creates labels, milestones, issues, board fields (gh CLI)
+â”‚   â””â”€â”€ db_raw_sql.py              # raw SQL demo: DDL + DML with sqlite3 / PyMySQL
+â”œâ”€â”€ docs/screenshots/
+â”œâ”€â”€ cli.py                         # command-line translator
+â”œâ”€â”€ manage.py  requirements.txt  .env.example  .gitignore  .gitattributes
 ```
 
 ## Setup
@@ -196,7 +196,7 @@ python scripts/db_raw_sql.py drop              # DROP TABLE
 ```powershell
 python manage.py test
 ```
-157 tests cover the language service, detection (including Hinglish), the engine fallback, the Gemini client, timeouts and cool-down, forms, every page, the CLI, chunking, analytics and the raw SQL script. All translation engines are **mocked** in tests, so they run offline in a couple of seconds, need no API key and never use up the free APIs.
+150 tests cover the language service, detection (including Hinglish), the engine fallback, the Gemini client, timeouts and cool-down, forms, every page, the CLI, chunking, analytics and the raw SQL script. All translation engines are **mocked** in tests, so they run offline in a couple of seconds, need no API key and never use up the free APIs.
 
 ## Screenshots
 
@@ -220,16 +220,16 @@ python manage.py test
 ## Project management
 
 - **User stories** are tracked as [GitHub Issues](https://github.com/saksham7730/polyglot-translator/issues) with acceptance criteria, MoSCoW priority and story points.
-- **Kanban board:** [GitHub Project](https://github.com/users/saksham7730/projects/2) with columns Backlog → Ready → In progress → In review → Done.
+- **Kanban board:** [GitHub Project](https://github.com/users/saksham7730/projects/2) with columns Backlog â†’ Ready â†’ In progress â†’ In review â†’ Done.
 - **Sprints** are tracked as [Milestones](https://github.com/saksham7730/polyglot-translator/milestones):
 
 | Sprint | Dates (2026) | Goal |
 |---|---|---|
-| Sprint 1: Core Translation | 7 Oct – 20 Oct | Setup, translate, auto-detect, save, error handling |
-| Sprint 2: History & CLI | 21 Oct – 3 Nov | History page, search/filter, delete, CLI |
-| Sprint 3: Analytics & Polish | 4 Nov – 17 Nov | Stats dashboard, file upload, text-to-speech, docs |
+| Sprint 1: Core Translation | 7 Oct â€“ 20 Oct | Setup, translate, auto-detect, save, error handling |
+| Sprint 2: History & CLI | 21 Oct â€“ 3 Nov | History page, search/filter, delete, CLI |
+| Sprint 3: Analytics & Polish | 4 Nov â€“ 17 Nov | Stats dashboard, file upload, text-to-speech, docs |
 
-- **Branching:** work happens on `feature/…` and `fix/…` branches and is merged through pull requests that say `Closes #N`, which closes the issue and moves its card to **Done**.
+- **Branching:** work happens on `feature/â€¦` and `fix/â€¦` branches and is merged through pull requests that say `Closes #N`, which closes the issue and moves its card to **Done**.
 
 ## Author
 
