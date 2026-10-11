@@ -11,17 +11,6 @@
     return el ? (el.value !== undefined ? el.value : el.textContent).trim() : "";
   }
 
-  // Briefly show a check mark (or cross) on a button, then put its original icon back
-  function flash(button, ok) {
-    if (!button.dataset.icon) button.dataset.icon = button.innerHTML;
-    button.textContent = ok ? "✓" : "✗";
-    button.classList.toggle("ok", ok);
-    setTimeout(() => {
-      button.innerHTML = button.dataset.icon;
-      button.classList.remove("ok");
-    }, 1500);
-  }
-
   // ---------- Listen ----------
   const speakButtons = document.querySelectorAll("[data-speak]");
   const synth = window.speechSynthesis;
@@ -37,12 +26,10 @@
           || voices.find((v) => v.lang.toLowerCase().split(/[-_]/)[0] === base);
     }
 
-    // Voices load asynchronously in some browsers, so check again when they arrive.
-    // Buttons with nothing to read yet (no translation) stay disabled.
+    // Voices load asynchronously in some browsers, so check again when they arrive
     function updateAvailability() {
-      if (synth.getVoices().length === 0) return;   // not loaded yet: leave buttons as they are
+      if (synth.getVoices().length === 0) return;   // not loaded yet: leave buttons enabled
       speakButtons.forEach((button) => {
-        if (!textOf(button.dataset.speak)) return;
         const available = Boolean(voiceFor(button.dataset.lang));
         button.disabled = !available;
         button.title = available ? "Listen" : "No voice for this language on this device";
@@ -50,7 +37,6 @@
     }
     updateAvailability();
     synth.addEventListener?.("voiceschanged", updateAvailability);
-    document.addEventListener("polyglot:result", updateAvailability);   // instant translate (home.js)
 
     speakButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -72,10 +58,11 @@
     button.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(textOf(button.dataset.copy));
-        flash(button, true);
+        button.textContent = "✓";
       } catch (e) {
-        flash(button, false);          // clipboard blocked (e.g. not on localhost / https)
+        button.textContent = "✗";      // clipboard blocked (e.g. not on localhost / https)
       }
+      setTimeout(() => (button.textContent = "📋"), 1500);
     });
   });
 })();

@@ -1,6 +1,6 @@
 """Views (the V in MVT): receive a request, return a response."""
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -58,26 +58,11 @@ def _initial_form_values(request, result):
     }
 
 
-def _stats():
-    """The three numbers shown under the translator."""
-    summary = Translation.objects.summary()
-    return [("Total translations", summary["total"]),
-            ("Languages used", summary["languages"]),
-            ("Today", summary["today"])]
-
-
-def _wants_json(request):
-    """True when home.js sent the form with fetch() (instant translate, no page reload)."""
-    return request.headers.get("X-Requested-With") == "fetch"
-
-
 def home(request):
     """GET shows the form (and the last result); POST translates, saves and redirects.
 
     Post/Redirect/Get: after a successful POST we redirect, so refreshing the page
     doesn't submit the form again and save a duplicate translation.
-    Instant translate: if home.js sent the POST with fetch(), we answer with JSON
-    instead, and the page updates in place. Without JavaScript the normal POST still works.
     """
     result = None
     if request.method == "POST":
@@ -87,24 +72,20 @@ def home(request):
             try:
                 translation = translate_text(data["text"], data["target_lang"], data["source_lang"])
             except TranslationError as exc:
-                if _wants_json(request):
-                    return JsonResponse({"ok": False, "error": str(exc)}, status=503)
                 messages.error(request, str(exc))
             else:
                 Translation.from_result(translation)  # US-03: save every successful translation
-                result = _result_to_dict(translation, data["source_lang"])
-                if _wants_json(request):
-                    return JsonResponse({"ok": True, **result, "stats": _stats()})
-                request.session[LAST_RESULT_KEY] = result
+                request.session[LAST_RESULT_KEY] = _result_to_dict(translation, data["source_lang"])
                 return redirect("translator:home")
-        elif _wants_json(request):
-            errors = {field: [str(e) for e in errs] for field, errs in form.errors.items()}
-            return JsonResponse({"ok": False, "errors": errors}, status=400)
     else:
         result = request.session.pop(LAST_RESULT_KEY, None)  # pop: show it once, then forget it
         form = TranslateForm(initial=_initial_form_values(request, result))
 
-    return render(request, "translator/home.html", {"form": form, "result": result, "stats": _stats()})
+    summary = Translation.objects.summary()
+    stats = [("Total translations", summary["total"]),
+             ("Languages used", summary["languages"]),
+             ("Today", summary["today"])]
+    return render(request, "translator/home.html", {"form": form, "result": result, "stats": stats})
 
 
 # ---------------------------------------------------------------------------
