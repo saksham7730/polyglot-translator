@@ -5,4 +5,4 @@ from django.apps import AppConfig
 class TranslatorConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "translator"
-    verbose_name = "Language Translator"
+    verbose_name = "Polyglot"
